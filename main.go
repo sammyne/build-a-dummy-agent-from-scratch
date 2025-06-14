@@ -8,6 +8,7 @@ import (
 
 	"github.com/sammyne/build-a-dummy-agent-from-scratch/agent"
 	"github.com/sammyne/build-a-dummy-agent-from-scratch/openai"
+	"github.com/sammyne/build-a-dummy-agent-from-scratch/tools"
 )
 
 func main() {
@@ -26,15 +27,21 @@ func main() {
 		return scanner.Text(), true
 	}
 
+	tools := []tools.Definition{
+		tools.EditFileDefinition,
+		tools.ListFilesDefinition,
+		tools.ReadFileDefinition,
+	}
+
 	// --- Create and Run Agent ---
-	agent := agent.New(getUserMessage, nil, openai.Model)
+	agent := agent.New(getUserMessage, tools, openai.Model)
 	if err := agent.Run(context.Background()); err != nil {
 		fmt.Fprintf(os.Stderr, "\u001b[91mAgent exited with error: %s\u001b[0m\n", err.Error())
 		os.Exit(1)
 	}
 }
 
-const DEFAULT_API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+const DEFAULT_API_ENDPOINT = "https://api.siliconflow.cn/v1/chat/completions"
 
 func validateEnv() {
 	// --- Configuration Checks ---
@@ -43,14 +50,14 @@ func validateEnv() {
 		os.Exit(1)
 	}
 
-	if os.Getenv("OPENAI_API_BASE") == "" {
+	if os.Getenv("OPENAI_API_ENDPOINT") == "" {
 		// Default to official OpenAI endpoint if base URL not set
 		openai.APIEndpoint = DEFAULT_API_ENDPOINT
 		fmt.Printf("Info: OPENAI_API_ENDPOINT not set, defaulting to %s\n", DEFAULT_API_ENDPOINT)
 	}
 	if openai.Model == "" {
 		// Default model if not set
-		openai.Model = "gemini-2.0-flash" // 或其他模型
+		openai.Model = "deepseek-ai/DeepSeek-V3" // 或其他模型
 		fmt.Printf("Info: OPENAI_MODEL not set, defaulting to %s\n", openai.Model)
 	}
 }

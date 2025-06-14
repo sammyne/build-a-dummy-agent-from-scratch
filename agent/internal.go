@@ -44,9 +44,9 @@ func (a *Agent) complete(ctx context.Context, conversation []openai.Message) (*o
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request payload: %w", err)
 	}
-	fmt.Printf("request: %s\n", requestJSON)
-	fmt.Printf("api-key: %s\n", openai.APIKey)
-	fmt.Printf("endpoint: %s\n", openai.APIEndpoint)
+	// fmt.Printf("request: %s\n", requestJSON)
+	// fmt.Printf("api-key: %s\n", openai.APIKey)
+	// fmt.Printf("endpoint: %s\n", openai.APIEndpoint)
 
 	// Create HTTP request
 	req, err := http.NewRequestWithContext(ctx, "POST", openai.APIEndpoint, bytes.NewBuffer(requestJSON))
